@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema(
     }
 )
 
-//do not use a arrow function here as this is involved
 userSchema.pre("save", async function(next){
     try{
         if(!(this.isModified("password")))

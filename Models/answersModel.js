@@ -18,12 +18,8 @@ const answerSchema = new mongoose.Schema(
             type:String,
             required:true
         },
-        upvote:{
-            type:Number,
-            required:true
-        },
         date:{
-            type:Number,
+            type:String,
             required:true
         }
     },{
