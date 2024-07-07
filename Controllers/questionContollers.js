@@ -14,6 +14,8 @@ const GetQuestion = async(req, res)=>{
 
         const viewCheck = await Views.findOne({userid:userid , questionid:qid})
         const isViewed = (!viewCheck)?false:true
+        if(!isViewed)
+            await Views.create({userid:userid , questionid:qid})
         const upvoteCheck = await Upvote.findOne({userid:userid , entityid:qid})
         const isUpvoted = (!upvoteCheck)?false:true
 

@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+    padding: 0px;
+    margin: 0px;
+    font-family: "Poppins", sans-serif;
+}
+body{
+    background-color: rgb(234, 234, 234);
+}
+svg{
+    width: 25px;
+    height: 25px;
+}
+.btn-p{
+    width: 30px;
+    height: 30px;
+    border-radius: 1000px;
+    margin: 0px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-p:hover{
+    background-color: rgb(230, 230, 230);
+}
+.q-user{
+    font-size: 0.9rem;
+}
+.navbar{
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(255, 255, 255);
+}
+.nav-btn-wrapper{
+    display: flex;
+}
+.heading{
+    color: rgb(255, 128, 0);
+    font-size: 2rem;
+    font-weight: bold;
+}
+.q-svg{
+    width: 20px;
+    display: flex;
+    padding: 0px 10px 0px 5px;
+}
+.q-info{
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+}
+.q-card{
+    border: 2px solid rgb(255, 128, 0);
+    border-radius: 10px;
+}
+.q-footer{
+    display: flex;
+    justify-content: space-between;
+}
+.q-date , .q-id , .q-info{
+    font-size: 0.8rem;
+    color: rgb(76, 76, 76);
+}
+.card-box{
+    padding: 20px;
+    height: 50vh;
+    overflow-y: scroll;
+}
+.q-title{
+    font-size: 1.1rem;
+}
+.q-card{
+    cursor: pointer;
+    padding:5px 15px;
+    margin: 10px 0px;
+}
+.link{
+    justify-content: center;
+    display: flex;
+}
+a{
+    text-decoration: none;
+}
+.add-q{
+    background-color: white;
+    padding: 10px 5px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.form-box{
+    margin-top: 30px;
+}
+form{
+    display: flex;
+    flex-direction: column;
+}
+.form{align-items: center;}
+form input{
+    width: 60vw;
+}
+textarea{
+    resize: none;
+    height: 75px;
+}
+input, textarea{
+    background: transparent;
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 5px 0px;
+}
+.sub-btn{
+    width: 100px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1.1rem;
+    padding: 5px 10px;
+    background-color: rgb(92, 255, 47);
+}
+.flex{
+    display: flex;
+    width: 100%;
+}
+.profile-head{
+    text-align: center;
+    width: 50%;
+}
+#a-box{
+    display: none;
+}
+.profile-box{
+    width: 100%;
+}
+.qp-id , .qp-user{
+    color: rgb(70, 70, 70);
+}
+.qp-title{
+    font-size: 1.5rem;
+}
+.qp-description{
+    font-size: 1.1rem;
+    height: 20vh;
+    overflow-y: scroll;
+}
+.qp-box{
+    padding: 10px;
+}
+hr{
+    margin: 10px 40px;
+}
+.qp-footer , .qp-info{
+    display: flex;
+}
+.qp-svg{
+    width: 40px;
+    padding: 0px 20px 0px 5px;
+}
+.ans-form{
+    padding: 10px 20px;
+    background-color: white;
+}
+.ans-input{
+    width: 100%;
+}
+.ans-form-box{
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+}
+.ans-box{
+    padding: 20px;
+}

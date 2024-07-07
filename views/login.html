@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="style.css">
     <title>Login</title>
 </head>
 <body>
-    <form action="/api/user/login" method="POST">
+    <div class="form-box">
+    <form class="form" action="/api/user/login" method="POST">
         <input type="text" name="username" placeholder="Enter your Username">
         <input type="password" name="password" placeholder="Enter your Password">
-        <input type="submit" value="Login">
+        <input class="sub-btn" type="submit" value="Login">
     </form>
-    <a href="/api/user/signup">Do not have an account?</a>
-    <a href="/api/user/forgot-password">Forgot Password?</a>
+    <div class="link"><a href="/api/user/signup">Do not have an account?</a></div>
+    <div class="link"><a href="/api/user/forgot-password">Forgot Password?</a></div>
+    </div>
 </body>
 <script src="script.js"></script>
 </html>
