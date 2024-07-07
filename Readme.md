@@ -1,6 +1,6 @@
 # npm modules required 
 
-npm i express dotenv mongoose jsonwebtokens bcrypt cookie-parser crypto nodemon nodemailer  <br/>
+npm i express dotenv mongoose jsonwebtokens bcrypt cookie-parser crypto nodemon nodemailer body-parser ejs <br/>
 
 USAGES:  <br/>
 express:framework for efficient routing  <br/>

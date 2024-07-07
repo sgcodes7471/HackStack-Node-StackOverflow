@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="singup.css">
+    <title>Signup</title>
+</head>
+<body>
+    <form action="/api/user/signup" method="POST">
+        <input type="text" name="username" placeholder="Enter your Username">
+        <input type="text" name="email" placeholder="Enter your Email">
+        <input type="password" name="password" placeholder="Enter your Password">
+        <input type="password" name="Confpassword" placeholder="Confirm your Password">
+        <input type="submit" value="Singup">
+    </form>
+    <a href="/api/user/login">Already have an account?</a>
+</body>
+<script src="script.js"></script>
+</html>
