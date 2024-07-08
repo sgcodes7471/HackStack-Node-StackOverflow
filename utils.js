@@ -1,9 +1,8 @@
-import { User } from './models/userModel.js'
+import { User } from './Models/userModel.js'
 const generateAccessTokenUtils = async (userID)=>{
     try{
         const user = await User.findById(userID)
         const AccessToken = user.generateAccessToken()
-        console.log(AccessToken)
         return AccessToken
     }catch(error){
         return false

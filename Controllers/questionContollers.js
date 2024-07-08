@@ -10,7 +10,6 @@ const GetQuestion = async(req, res)=>{
         const question = await Question.findById(qid)
         if(!question)
             throw new Error(400,'Question not found')
-        const answers = await Answer.find({questionid:qid}).sort({createdAt : -1}).exec()
 
         const viewCheck = await Views.findOne({userid:userid , questionid:qid})
         const isViewed = (!viewCheck)?false:true
@@ -18,6 +17,13 @@ const GetQuestion = async(req, res)=>{
             await Views.create({userid:userid , questionid:qid})
         const upvoteCheck = await Upvote.findOne({userid:userid , entityid:qid})
         const isUpvoted = (!upvoteCheck)?false:true
+
+        let answers = await Answer.find({questionid:qid}).sort({createdAt : -1}).exec()
+        answers.map(async (answer) => {
+            const answerUpvoteCheck = await Upvote.findOne({userid:userid, entityid:answer._id})
+            if(!answerUpvoteCheck)
+                answer.isUpvoted = true
+        });
 
         return res.status(201).json({
             "error":false,
@@ -69,9 +75,9 @@ const UpvoteQuestion = async (req, res)=>{
         const UpvoteCheck = await Upvote.findOne({userid:userid , entityid:questionid})
         if(UpvoteCheck!== null){
             const DownVote = await Upvote.findByIdAndDelete(UpvoteCheck._id)
-            if(!DownVote){
+            if(!DownVote)
                 throw new Error(500 , "UpVote not removed due to technical error")
-            }
+
             const question = await Question.findById(questionid)
             const currentUpvotes = question.upvote - 1;
             question.upvote = currentUpvotes
@@ -80,7 +86,7 @@ const UpvoteQuestion = async (req, res)=>{
             return res.status(200).json({
                 "error":false,
                 "message":"UpVote Removed Successfully",
-                "data":newUpvoteCount.upvote
+                "newUpvotes":newUpvoteCount.upvote
             })
         }
         const newUpVote= await Upvote.create({userid:userid , entityid:questionid})
@@ -94,13 +100,12 @@ const UpvoteQuestion = async (req, res)=>{
         return res.status(200).json({
             "error":false,
             "message":"Question Upvoted Successfully",
-            "data":newUpvoteCount.upvote
+            "newUpvotes":newUpvoteCount.upvote
         })
     }catch(error){
-        return res.status(500).json({
+        return res.status(error.status || 500).json({
             "error":true,
-            "message":"Server Error Occured",
-            "data":null
+            "message":error.message || "Server Error Occured"
         })
     }
 }
@@ -112,6 +117,9 @@ const DelQuestion = async (req, res)=>{
         if(!questionToBeDel || questionToBeDel.deletedCount===0){
             throw new Error(500,'Question could not be deleted')
         }
+        await Upvote.deleteMany({entityid:qid})
+        await Answer.deleteMany({questionid:qid})
+        await Views.deleteMany({questionid:qid})
         res.status(200).json({
             "error":false,
             "message":"Question Deleted Successfully"

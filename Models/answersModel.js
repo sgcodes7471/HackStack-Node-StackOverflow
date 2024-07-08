@@ -21,6 +21,10 @@ const answerSchema = new mongoose.Schema(
         date:{
             type:String,
             required:true
+        },
+        upvote:{
+            type:Number,
+            default:0
         }
     },{
         timestamps:true

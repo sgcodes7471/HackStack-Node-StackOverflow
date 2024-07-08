@@ -1,15 +1,13 @@
-import {Question} from '../Models/questionModel.js'
 import {Answer} from '../Models/answersModel.js'
-import { User } from '../models/userModel.js';
+import { User } from '../Models/userModel.js'
+import { Upvote } from '../Models/upvoteModel.js'
 
 const AddAnswers = async (req, res)=>{
     try{
         const userid = req.user._id
         const qid= req.params.qid
-        const title = req.body.title
-        const description =  req.body.description
-
-        if(!title || !description )
+        const answer = req.body.answer
+        if(!answer )
             throw new Error(400 , 'Inadequete Information')
 
         const date = new Date.now()
@@ -19,7 +17,7 @@ const AddAnswers = async (req, res)=>{
 
         const user = await User.findById(userid)
 
-        const newAnswer = await Answer.create({userid:userid,questionid:qid,username:user.username,title:title,description:description,date:`${day}/${month}/${year}`})
+        const newAnswer = await Answer.create({userid:userid,questionid:qid,username:user.username,answer:answer,date:`${day}/${month}/${year}`})
         if(!newAnswer)
             throw new Error("Server Error Occured")
         return res.status(200).json({
@@ -42,6 +40,7 @@ const DelAnswers = async (req, res)=>{
         const answerToBeDel = await Answer.deleteOne({userid:user._id , questionid:qid , _id:cid})
         if(!answerToBeDel || answerToBeDel.deletedCount===0)
             throw new Error('Comment could not be deleted')
+        await Upvote.deleteMany({entityid:cid})
 
         res.status(200).json({
             "error":false,
@@ -54,5 +53,46 @@ const DelAnswers = async (req, res)=>{
         })
     }
 }
+const UpvoteAnswer = async (req, res)=>{
+    try{
+        const userid=req.user._id
+        const answerid =  req.params.cid
+        const UpvoteCheck = await Upvote.findOne({userid:userid , entityid:answerid})
+        if(UpvoteCheck!== null){
+            const DownVote = await Upvote.findByIdAndDelete(UpvoteCheck._id)
+            if(!DownVote)
+                throw new Error(500 , "UpVote not removed due to technical error")
 
-export {GetAnswers , AddAnswers , DelAnswers}
+            const answer = await Answer.findById(questionid)
+            const currentUpvotes = answer.upvote - 1;
+            answer.upvote = currentUpvotes
+            const newUpvoteCount = await answer.save({validateBeforeSave:false})
+            await Upvote.findOneAndDelete({userid:userid , entityid:answerid})
+            return res.status(200).json({
+                "error":false,
+                "message":"UpVote Removed Successfully",
+                "newUpvotes":newUpvoteCount.upvote
+            })
+        }
+        const newUpVote= await Upvote.create({userid:userid , entityid:answerid})
+        if(!newUpVote){
+            throw new Error(500 , "Question UpVote unsuccessfull")
+        }
+        const answer = await Answer.findById(answerid)
+        const currentUpvotes = answer.upvote +1;
+        answer.upvote = currentUpvotes
+        const newUpvoteCount = await answer.save({validateBeforeSave:false})
+        return res.status(200).json({
+            "error":false,
+            "message":"Question Upvoted Successfully",
+            "newUpvotes":newUpvoteCount.upvote
+        })
+    }catch(error){
+        return res.status(error.status || 500).json({
+            "error":true,
+            "message":error.messaga || 'server error occured'
+        })
+    }
+}
+
+export { AddAnswers , DelAnswers , UpvoteAnswer}

@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema(
         },
         verfied:{
             type:Boolean
+        },
+        pwordChange:{
+            type:Boolean,
+            default:false
         }
     },{
         timestamps:true

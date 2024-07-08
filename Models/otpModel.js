@@ -20,7 +20,7 @@ const otpSchema=new mongoose.Schema({
 otpSchema.pre("save" , async function(next){
     if(!(this.isModified("otp")))
         return next()
-    this.otp = await bcrypt.hash(this.otp, 10)
+    this.otp = await bcrypt.hash(this.otp, 2)
     next()
 })
 otpSchema.methods.isOTPCorrect = async function(otp){

@@ -6,7 +6,7 @@
     <title>Question</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body onmouseenter="handleUpvoteColor('<%= isUpvoted %>')">
+<div onmouseenter="handleUpvoteColor('<%= isUpvoted %>')">
     <div class="navbar">
         <div class="heading">StackUnderflow</div>
         <div class="nav-btn-wrapper">
@@ -22,7 +22,7 @@
             </p>
         </div>
     </div>
-
+<div class="qp-outer-box">
     <div class="qp-box">
         <div class="qp-id"><%= question._id %></div>
         <div class="qp-user">Posted by <%= question.username %> on <%= question.date %></div>
@@ -56,8 +56,24 @@
     </div>
 
     <div class="ans-box">
-       <!-- try adding a my answers box as well -->
+        <div>Answers Section</div>
+         <!-- <% if(answers.length>0){ answers.forEach((answer)=>{ %> -->
+         <div class="q-card">
+            <div class="q-id"><%= answer._id %></div>
+            <div class="q-user">By <%= answer.username %></div>
+            <div class='q-title'><%= answer.title %></div>
+            <div ><%= answer.text %></div>
+            <div class="q-footer">
+                <div class="q-date">
+                    Posted on <%= answer.date %>
+                </div>
+            </div>
+        </div>
+        <!-- <% }}else{ %> -->
+            <!-- <div>No Questions in feed to show</div> -->
+        <!-- <% }%> -->
     </div>
+</div>
 </body>
 <script src="script.js"></script>
 </html>

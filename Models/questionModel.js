@@ -26,6 +26,9 @@ const questionSchema = new mongoose.Schema(
             type:Number,
             required:true
         },
+        tags:[{
+            type:String
+        }],
         views:{
             type:Number
         }

@@ -29,12 +29,12 @@
     </div>
 
     <div class="flex">
-        <div class="profile-head" onclick="handleProfile({show:'q-box',hide:'a-box'})">My Questions</div>
-        <div class="profile-head" onclick="handleProfile({show:'a-box',hide:'q-box'})">My Answers</div>
+        <div class="profile-head" id="ph-q" onclick="handleProfile({show:'q-box',hide:'a-box'})">My Questions</div>
+        <div class="profile-head" id="ph-a" onclick="handleProfile({show:'a-box',hide:'q-box'})">My Answers</div>
     </div>
     <div class="flex">
-        <div class="profile-box" id="q-box">Questions
-             <!-- <% if(questions.length>0){ questions.forEach((question)=>{ %>
+        <div class="profile-box" id="q-box">
+             <!-- <% if(questions.length>0){ questions.forEach((question)=>{ %> -->
             <div class="q-card">
                 <div class="q-id"><%= question._id %></div>
                 <div class="q-user">By <%= question.username %></div>
@@ -58,26 +58,26 @@
                     </div>
                 </div>
             </div>
-            <% }}else{ %>
+            <!-- <% }}else{ %>
                 <div>No Questions in feed to show</div>
             <% }%> -->
         </div>
-        <div class="profile-box" id="a-box">Answers
-             <!-- <% if(answers.length>0){ answers.forEach((answers)=>{ %>
+        <div class="profile-box" id="a-box">
+             <!-- <% if(answers.length>0){ answers.forEach((answer)=>{ %> -->
             <div class="q-card">
                 <div class="q-id"><%= answer._id %></div>
                 <div class="q-user">By <%= answer.username %></div>
-                <div class=''><%= answer.title %></div>
-                <div class="q-title"><%= answer.text %></div>
+                <div class='q-title'><%= answer.title %></div>
+                <div ><%= answer.text %></div>
                 <div class="q-footer">
                     <div class="q-date">
                         Posted on <%= answer.date %>
                     </div>
                 </div>
             </div>
-            <% }}else{ %>
-                <div>No Questions in feed to show</div>
-            <% }%> -->
+            <!-- <% }}else{ %> -->
+                <!-- <div>No Questions in feed to show</div> -->
+            <!-- <% }%> -->
         </div>
     </div>
 </body>
