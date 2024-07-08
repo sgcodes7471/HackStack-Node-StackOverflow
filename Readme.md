@@ -33,16 +33,16 @@ after installing all the dependcies, open the directory in which there is the se
 
 # about the website
 
-User can create an account with a unique email and username. They receive a welcome email if their email is valid. <br/>
-Then Users can go and login.<br/>
-If a user forgets the password, they can make a forget password request. However this works only if the verified the registered email after first login<br/>
-Once successfully loggedin, user is rediected to the dashboard and receives a accesstoken cookie. The accessTOken is valid for process.env.ACCESS_TOKEN_EXPIRY time frame after which the user automatically logs out<br/>
-User can manually logOut as well from the navbar option. This clears the cookie <br/>
-In the dashboard, the user is shown the latest posted questions. User can view the questions by clicking on the question card<br/>
-The upvotes on the questions and the unique views on the question along with the date it was posted are also displaye <br/>
-Users can post questions by filling the form in the bottom of the dashboard <br/>
-Users can also post answers to a question in the question card <br/>
-User can delete their own questions and answers from the profile page<br/>
+•User can create an account with a unique email and username. They receive a welcome email if their email is valid. <br/>
+•Then Users can go and login.<br/>
+•If a user forgets the password, they can make a forget password request. However this works only if the verified the registered email after first login<br/>
+•Once successfully loggedin, user is rediected to the dashboard and receives a accesstoken cookie. The accessTOken is valid for process.env.ACCESS_TOKEN_EXPIRY time frame after which the user automatically logs out<br/>
+•User can manually logOut as well from the navbar option. This clears the cookie <br/>
+•In the dashboard, the user is shown the latest posted questions. User can view the questions by clicking on the question card<br/>
+•The upvotes on the questions and the unique views on the question along with the date it was posted are also displaye <br/>
+•Users can post questions by filling the form in the bottom of the dashboard <br/>
+•Users can also post answers to a question in the question card <br/>
+•User can delete their own questions and answers from the profile page<br/>
 
 
 # api guide
