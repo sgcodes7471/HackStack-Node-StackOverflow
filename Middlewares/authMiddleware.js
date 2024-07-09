@@ -4,7 +4,6 @@ const authMiddleware = async ( req, res, next)=>{
         const authToken = req.cookies?.AccessToken || req.headers['AccessToken']?.replace("Bearer " , '')
         if(!authToken)
             throw new Error(401 , "No Token")
-        console.log(authToken);
         jwt.verify(authToken , process.env.ACCESS_TOKEN_SECRET , (error,info)=>{
             if(!info)
                 throw new Error(401, "Validation failed")

@@ -10,8 +10,9 @@ const AddAnswers = async (req, res)=>{
         if(!answer )
             throw new Error(400 , 'Inadequete Information')
 
-        const date = new Date.now()
-        const day = String(date.getDay())
+        const date = new Date()
+        const day = String(date.getDate())
+        console.log(day)
         const month = String(date.getMonth()+1)
         const year = String(date.getFullYear())
 
@@ -39,12 +40,12 @@ const DelAnswers = async (req, res)=>{
         const user = req.user;
         const answerToBeDel = await Answer.deleteOne({userid:user._id , questionid:qid , _id:cid})
         if(!answerToBeDel || answerToBeDel.deletedCount===0)
-            throw new Error('Comment could not be deleted')
+            throw new Error('Answer could not be deleted')
         await Upvote.deleteMany({entityid:cid})
 
         res.status(200).json({
             "error":false,
-            "message":"Comment Deleted Successfully"
+            "message":"Answer Deleted Successfully"
         })
     }catch(error){
         return res.status(error.status||500).json({
@@ -63,7 +64,7 @@ const UpvoteAnswer = async (req, res)=>{
             if(!DownVote)
                 throw new Error(500 , "UpVote not removed due to technical error")
 
-            const answer = await Answer.findById(questionid)
+            const answer = await Answer.findById(answerid)
             const currentUpvotes = answer.upvote - 1;
             answer.upvote = currentUpvotes
             const newUpvoteCount = await answer.save({validateBeforeSave:false})
@@ -84,7 +85,7 @@ const UpvoteAnswer = async (req, res)=>{
         const newUpvoteCount = await answer.save({validateBeforeSave:false})
         return res.status(200).json({
             "error":false,
-            "message":"Question Upvoted Successfully",
+            "message":"Answer Upvoted Successfully",
             "newUpvotes":newUpvoteCount.upvote
         })
     }catch(error){

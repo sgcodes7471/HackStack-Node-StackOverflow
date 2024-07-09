@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get('/:qid',authMiddleware,GetQuestion)
 router.post('/add-question',authMiddleware,AddQuestion)
-router.post('/:qid/upvote-question',UpvoteQuestion)
+router.post('/:qid/upvote-question',authMiddleware,UpvoteQuestion)
 router.post('/:qid/add-answer',authMiddleware,AddAnswers)
 router.post('/:qid/upvote-answer/:cid',authMiddleware,UpvoteAnswer)
 
