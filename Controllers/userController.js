@@ -1,21 +1,25 @@
 import { Otp } from "../Models/otpModel.js"
 import { Question } from "../Models/questionModel.js"
 import { User } from "../Models/userModel.js"
-import { mailUtil,otpGenerator,generateAccessTokenUtils } from "../utils.js"
+import { mailUtil,otpGenerator,generateAccessTokenUtils, generateRefreshTokenUtils } from "../utils.js"
+import jwt from 'jsonwebtoken'
 
 const Signup = async(req, res)=>{
     try {
-        const {username , email , password } = req.body
+        const {username , email , password , Confpassword} = req.body
         
-        if(email === undefined || username === undefined || password === undefined)
+        if(email === undefined || username === undefined || password === undefined || Confpassword === undefined)
             throw new Error(400,'all required fields are not sent')
         
+        if(password !== Confpassword)
+            throw new Error(400 , 'Confirm password must match with Password')
+
         if(password.length < 8)
             throw new Error(400,'Password must have at least 8 characters')
-            
+           
         const userExistenceCheck = await User.findOne({$or:[{email:email} , {username:username}]})
         if(!(userExistenceCheck===null) && (userExistenceCheck.email==email || userExistenceCheck.username==username))
-            throw new Error(400,'Password must have at least 8 characters')
+            throw new Error(400,'USer with same Email or username already exists')
         const newUser = await User.create({username , email , password})
         if(newUser === null)
             throw new Error(505,'New User not Created due to Server Error' )
@@ -37,22 +41,23 @@ const Logout = async(req, res)=>{
     try{
         let user = req.user;
         user=await User.findById(user._id)
+        user.refreshToken = undefined
         await user.save({validateBeforSave:false})
         const options ={
             httpOnly:true,
             secure:process.env.DEV_STATE === 'production'
         }
-            return  res.status(200).clearCookie('AccessToken' , options)
-            .json({
+        return  res.status(200).clearCookie('AccessToken' , options).clearCookie("RefreshToken",options)
+        .json({
                 "error":false,
                 "message":"User Logged Out Successfully"
             })
-        }catch(error){
-            return  res.status(500).json({
-                "error":true,
-                "message":"Error in Server while logging Out the user"
-            })
-        }
+    }catch(error){
+        return  res.status(500).json({
+            "error":true,
+            "message":"Error in Server while logging Out the user"
+        })
+    }
 }
 const Login = async(req, res)=>{
     const username=req.body.username;
@@ -69,18 +74,21 @@ const Login = async(req, res)=>{
         throw new Error(401,"Incorrect Password")
     }
     const AccessToken = await generateAccessTokenUtils(user._id);
+    const RefreshToken = await generateRefreshTokenUtils(user._id)
     
-    if(!AccessToken)
+    if(!AccessToken || !RefreshToken)
         throw new Error(501, "Error in Generating Bearer Tokens")
        
-    const loggedInUser=await User.findById(user._id).select(" -password ")
+    const loggedInUser=await User.findById(user._id).select(" -password -refreshToken")
     const options={
         httpOnly:true,
         secure:process.env.DEV_STATE === 'production'
     }
+    loggedInUser.refreshToken=RefreshToken
     loggedInUser.save({validateBeforeSave:false})
-    return res.status(200).cookie("AccessToken", AccessToken, options).
-    json({
+    return res.status(200).cookie("AccessToken", AccessToken, options)
+    .cookie("RefreshToken" , RefreshToken , options)
+    .json({
         "error":false,
         "loggedInUser":loggedInUser,
         "message":"Succesfull Login"
@@ -91,6 +99,42 @@ const Login = async(req, res)=>{
         "message":error.message || "Some Error Occured"
     })
   }
+}
+const Refresh = async (req, res)=>{
+    try {
+        const sentToken = req.cookie?.RefreshToken || req.headers['RefreshToken']?.replace("Bearer ", '')
+        if(!sentToken)
+            throw new Error(401, 'No Refresh Token')
+
+        const sentUser = jwt.verify(sentToken , process.env.REFRESH_TOKEN_SECRET)
+        if(!sentUser)
+            throw new Error(401, "Invalid Token")
+
+        const user = await User.findById(sentUser._id)
+        if(!user)
+            throw new Error(400 , 'NO valid user')
+        if(user?.refreshToken !== sentToken)
+            throw new Error(401, "Incorrect Tokens")
+
+        const AccessToken =  await generateAccessTokenUtils(user._id)
+        const options={
+            httpOnly:true,
+            secure:process.env.DEV_STATE === 'production'
+        }
+
+        return res.status(200)
+        .cookie("AccessToken" , AccessToken , options)
+        .cookie("RefreshToken" , user.refreshToken , options)
+        .json({
+            "error":false,
+            "message":"Refresh successfull"
+        })
+    } catch (error) {
+        return res.status(error.status || 500).json({
+            "error":true,
+            "message":error.message || "Server error occured"
+        })
+    }
 }
 const ForgotPassword = async(req,res)=>{
     try{
@@ -165,6 +209,17 @@ const ResetPassword = async(req,res)=>{
     try{
         const username = req.headers['username']
         const newPassword= req.body.newPassword
+        const ConfnewPassword = req.body.ConfnewPassword
+
+        if(newPassword === undefined || ConfnewPassword === undefined)
+            throw new Error(400,'all required fields are not sent')
+        
+        if(newPassword !== ConfnewPassword)
+            throw new Error(400,'Confirm password must match with Password')
+
+        if(newPassword.length<8)
+            throw new Error(400,'Password must have at least 8 characters')
+        
         const user = await User.findOne({username:username})
         if(!user.pwordChange)
             throw new Error('No eligibility for password reset')
@@ -202,4 +257,4 @@ const Dashboard = async(req, res)=>{
     }
 }
 
-export {Login , Signup , Logout ,ForgotPassword, Dashboard, OtpCheck ,ResetPassword}
+export {Login , Signup , Logout , Refresh ,ForgotPassword, Dashboard, OtpCheck ,ResetPassword}

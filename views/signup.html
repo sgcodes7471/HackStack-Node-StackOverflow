@@ -9,10 +9,10 @@
 <body>
     <div class="form-box">
     <form class="form" action="/api/user/signup" method="POST">
-        <input type="text" name="username" placeholder="Enter your Username">
-        <input type="text" name="email" placeholder="Enter your Email">
-        <input type="password" name="password" placeholder="Enter your Password">
-        <input type="password" name="Confpassword" placeholder="Confirm your Password">
+        <input type="text" name="username" placeholder="Enter your Username" required>
+        <input type="text" name="email" placeholder="Enter your Email" required>
+        <input type="password" name="password" placeholder="Enter your Password" required>
+        <input type="password" name="Confpassword" placeholder="Confirm your Password" required>
         <input class="sub-btn" type="submit" value="Sign Up">
     </form>
     <div class="link"><a href="/api/user/login">Already have an account?</a></div>

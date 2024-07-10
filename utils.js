@@ -8,6 +8,15 @@ const generateAccessTokenUtils = async (userID)=>{
         return false
     }
 }
+const generateRefreshTokenUtils = async (userID)=>{
+    try{
+        const user = await User.findById(userID)
+        const RefreshToken = user.generateRefreshToken()
+        return RefreshToken
+    }catch(error){
+        return false
+    }
+}
 
 
 import nodemailer from 'nodemailer';
@@ -44,4 +53,4 @@ const mailUtil = (email , text )=>{
     })
 }
 
-export {generateAccessTokenUtils , otpGenerator , mailUtil}
+export {generateAccessTokenUtils , generateRefreshTokenUtils, otpGenerator , mailUtil}

@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
+import { type } from 'os';
 const userSchema = new mongoose.Schema(
     {
         username:{
@@ -25,6 +26,9 @@ const userSchema = new mongoose.Schema(
         pwordChange:{
             type:Boolean,
             default:false
+        },
+        refreshToken:{
+            type:String
         }
     },{
         timestamps:true
@@ -67,6 +71,22 @@ userSchema.methods.generateAccessToken=function(){
     )
  }catch(error){
     console.log("Error in Signing of Access Token")
+    throw error;
+ }
+}
+userSchema.methods.generateRefreshToken=function(){
+ try{
+    return  jwt.sign(
+        {
+            _id:this._id
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn:process.env.REFRESH_TOKEN_EXPIRY
+        }
+    )
+ }catch(error){
+    console.log("Error in Signing of Refresh Token")
     throw error;
  }
 }
