@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    
+    <div class="form-box">
+    Enter the 4 digit OTP sent to your Registered Email
+    <form class="form" action="/api/profile/email-verify" method="POST">
+        <input type="text" name="otp" placeholder="Enter your OTP" required/>
+        <input class="sub-btn" type="submit" value="Verify OTP">
+    </form>
+    </div>
+</body>
+</html>

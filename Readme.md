@@ -1,3 +1,9 @@
+# important note
+
+if you are going to make only postman/thunderclient request, then no need to do this.<br/>
+if you are testing from browser and getting some error regarding ejs module, then try running your code editor as administrator
+
+
 # npm modules required 
 
 npm i express dotenv mongoose jsonwebtokens bcryptjs bcrypt cookie-parser crypto nodemon nodemailer body-parser ejs <br/>

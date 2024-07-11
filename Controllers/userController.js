@@ -25,13 +25,16 @@ const Signup = async(req, res)=>{
             throw new Error(505,'New User not Created due to Server Error' )
         
         mailUtil(email , "Welcome to StackUnderflow!!");
-        return res.status(200).json({
-            user:newUser,
-            "error":false,
-            "message":"Succesfully created account. GO LOG IN!!!!"
-        })
+        return res.status(200)
+        .render('/api/user/login')
+        // .json({
+        //     user:newUser,
+        //     "error":false,
+        //     "message":"Succesfully created account. GO LOG IN!!!!"
+        // })
     } catch (error) {
-        return res.status(error.status||500).json({
+        return res.status(error.status||500)
+        .render('error',{
             "error":true,
             "message":error.message || 'Some Error Occurred'
         })
@@ -48,12 +51,13 @@ const Logout = async(req, res)=>{
             secure:process.env.DEV_STATE === 'production'
         }
         return  res.status(200).clearCookie('AccessToken' , options).clearCookie("RefreshToken",options)
-        .json({
-                "error":false,
-                "message":"User Logged Out Successfully"
-            })
+        .redirect('/api/user/login')
+        // .json({
+        //         "error":false,
+        //         "message":"User Logged Out Successfully"
+        //     })
     }catch(error){
-        return  res.status(500).json({
+        return  res.status(500).render('error',{
             "error":true,
             "message":"Error in Server while logging Out the user"
         })
@@ -88,15 +92,16 @@ const Login = async(req, res)=>{
     loggedInUser.save({validateBeforeSave:false})
     return res.status(200).cookie("AccessToken", AccessToken, options)
     .cookie("RefreshToken" , RefreshToken , options)
-    .json({
-        "error":false,
-        "loggedInUser":loggedInUser,
-        "message":"Succesfull Login"
-    });
+    .redirect('/api/user/dashboard')
+    // .json({
+    //     "error":false,
+    //     "loggedInUser":loggedInUser,
+    //     "message":"Succesfull Login"
+    // });
   }catch(error){
-    return res.status(error.status || 500).json({
+    return res.status(error.status || 500).render('error',{
         "error":true,
-        "message":error.message || "Some Error Occured"
+        "message":"Some Error Occured"
     })
   }
 }
@@ -157,12 +162,14 @@ const ForgotPassword = async(req,res)=>{
            
         const NewOTP=await Otp.create({userid:user._id , otp:otp , expiresIn:(Date.now()+15*60*1000)})
         mailUtil(user.email , `Your OTP for StackUnderflow account password retrieval otp: ${otp}`)
-        return res.status(200).json({
+        return res.status(200)
+        .render('/api/user/forgot-password/otp-check')
+        .json({
             "error":false,
             "message":`OTP sent to your registered email address`
         })
     }catch(error){
-        return res.status(error.status || 501).json({
+        return res.status(error.status || 501).render('error',{
             "error":true,
             "message":error.message || "Server error occured"
         })
@@ -194,12 +201,14 @@ const OtpCheck= async(req, res)=>{
         user.save({validateBeforSave:false})
         await Otp.deleteOne({userid:user._id})
 
-        return res.status(200).json({
-            "error":false,
-            "message":"OTP Verification Successfull. Please wait till we redirect you to Reset Password"
-        })
+        return res.status(200)
+        .redirect('/api/user/forgot-password/reset-password')
+        // .json({
+        //     "error":false,
+        //     "message":"OTP Verification Successfull. Please wait till we redirect you to Reset Password"
+        // })
     }catch(error){
-        return res.status(error.status || 501).json({
+        return res.status(error.status || 501).render('error',{
             "error":true,
             "message":error.message || "Server Error Occured"
         })
@@ -230,10 +239,12 @@ const ResetPassword = async(req,res)=>{
         user.pwordChange=false
         user.save({validateBeforeSave:false})
         mailUtil(user.email , "Your StackUnderflow Password is reset successfully")
-        return res.status(200).json({
-            "error":false,
-            "message":"Password Reset Successfull"
-        })
+        return res.status(200)
+        .redirect('/api/user/login')
+        // .json({
+        //     "error":false,
+        //     "message":"Password Reset Successfull"
+        // })
     }catch(error){
         return res.status(501).json({
             "error":true,
@@ -244,16 +255,20 @@ const ResetPassword = async(req,res)=>{
 const Dashboard = async(req, res)=>{
     try{
         const questions = await Question.find().sort({createdAt:-1}).exec()
-        return res.status(201).json({
-            "error":false,
-            "questions":questions,
-            "message":'Success'
-        })
+        return res.status(201)
+        .render('dashboard' , {error:false, questions:questions , message:"Success"})
+        // .json({
+        //     "error":false,
+        //     "questions":questions,
+        //     "message":'Success'
+        // })
     }catch(error){
-        return res.status(error.status || 500).json({
-            "error":true,
-            "message":error.status || 'Server Error Occured'
-        })
+        return res.status(error.status || 500)
+        .render('error', {error:true, questions:[] , message:"Some Error Occured"})
+        // .json({
+        //     "error":true,
+        //     "message":error.status || 'Server Error Occured'
+        // })
     }
 }
 

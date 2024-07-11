@@ -9,6 +9,6 @@ router.get('/',authMiddleware,Profile)
 router.get('/email-verify',authMiddleware,GetEmailVerfiy)
 router.post('/email-verify',authMiddleware,PostEmailVerify)
 router.delete('/:qid/del-question',authMiddleware,DelQuestion)
-router.delete('/:qid/del-answer/:cid',authMiddleware,DelAnswers)
+router.delete('/:cid/del-answer/',authMiddleware,DelAnswers)
 
 export default router

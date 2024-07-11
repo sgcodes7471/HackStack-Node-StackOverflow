@@ -29,7 +29,8 @@ const GetQuestion = async(req, res)=>{
 
         });
 
-        return res.status(201).json({
+        return res.status(201)
+        .render('question',{
             "error":false,
             "question":question,
             "answer":answers,
@@ -38,7 +39,7 @@ const GetQuestion = async(req, res)=>{
             "message":'Success'
         })
     }catch(error){
-        return res.status(error.status || 500).json({
+        return res.status(error.status || 500).render('error',{
             "error":true,
             "mesaage":error.mesaage || 'Some Error Occured'
         })
@@ -64,13 +65,14 @@ const AddQuestion = async (req, res)=>{
         const newQuestion = await Question.create({userid:user._id,username:user.username,title,description,date:`${day}/${month}/${year}`,upvote:0,views:0,tags:tagsArray})
         if(!newQuestion)
             throw new Error(501,'Question could be added')
-        return res.status(200).json({
-            "error":false,
-            "message":'Successfully added',
-            "newQuestion":newQuestion
-        })
+        return res.status(200)
+        // .json({
+        //     "error":false,
+        //     "message":'Successfully added',
+        //     "newQuestion":newQuestion
+        // })
     }catch(error){
-        return res.status(error.status || 500).json({
+        return res.status(error.status || 500).render('error',{
             "error":true,
             "message":error.message || 'Server Error occured'
         })
@@ -91,11 +93,13 @@ const UpvoteQuestion = async (req, res)=>{
             question.upvote = currentUpvotes
             const newUpvoteCount = await question.save({validateBeforeSave:false})
             await Upvote.findOneAndDelete({userid:userid , entityid:questionid})
-            return res.status(200).json({
-                "error":false,
-                "message":"UpVote Removed Successfully",
-                "newUpvotes":newUpvoteCount.upvote
-            })
+            return res.status(200)
+            .redirect(`/api/question/${questionid}`)
+            // .json({
+            //     "error":false,
+            //     "message":"UpVote Removed Successfully",
+            //     "newUpvotes":newUpvoteCount.upvote
+            // })
         }
         const newUpVote= await Upvote.create({userid:userid , entityid:questionid})
         if(!newUpVote){
@@ -105,13 +109,15 @@ const UpvoteQuestion = async (req, res)=>{
         const currentUpvotes = question.upvote +1;
         question.upvote = currentUpvotes
         const newUpvoteCount = await question.save({validateBeforeSave:false})
-        return res.status(200).json({
-            "error":false,
-            "message":"Question Upvoted Successfully",
-            "newUpvotes":newUpvoteCount.upvote
-        })
+        return res.status(200)
+        .redirect(`/api/question/${questionid}`)
+        // .json({
+        //     "error":false,
+        //     "message":"Question Upvoted Successfully",
+        //     "newUpvotes":newUpvoteCount.upvote
+        // })
     }catch(error){
-        return res.status(error.status || 500).json({
+        return res.status(error.status || 500).render('error',{
             "error":true,
             "message":error.message || "Server Error Occured"
         })
@@ -132,12 +138,14 @@ const DelQuestion = async (req, res)=>{
         })
         await Answer.deleteMany({questionid:qid})
         await Views.deleteMany({questionid:qid})
-        res.status(200).json({
-            "error":false,
-            "message":"Question Deleted Successfully"
-        })
+        res.status(200)
+        .redirect('/api/user/profile')
+        // .json({
+        //     "error":false,
+        //     "message":"Question Deleted Successfully"
+        // })
     }catch(error){
-        return res.status(error.status || 500).json({
+        return res.status(error.status || 500).render('error',{
             "error":true,
             "message":error.mesaage || 'Server error occured'
         })

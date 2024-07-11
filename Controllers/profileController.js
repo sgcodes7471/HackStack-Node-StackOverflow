@@ -13,7 +13,8 @@ const Profile = async (req, res)=>{
         const questions = await Question.find({userid:userid}).sort({ createdAt: -1 }).exec()
         const answers = await Answer.find({userid:userid}).sort({ createdAt: -1 }).populate('questionid').exec()
         
-        return res.status(200).json({
+        return res.status(200)
+        .render('profile',{
             "error":false,
             "user":user,
             "questions":questions,
@@ -22,9 +23,13 @@ const Profile = async (req, res)=>{
         })
         
     }catch(error){
-       return res.status(error.status||500).json({
+       return res.status(error.status||500)
+       .render('error',{
             "error":true,
-            "message":error.message || 'Server Error Occured'
+            "message":error.message || 'Server Error Occured',
+            "user":null,
+            "questions":[],
+            "answers":[]
         })
     }
 }
@@ -45,13 +50,15 @@ const GetEmailVerfiy = async(req, res)=>{
             
         const NewOTP=await Otp.create({userid:user._id , otp:otp , expiresIn:(Date.now()+15*60*1000)})
         mailUtil(user.email , `Your OTP for StackUnderflow account id ${otp}`)
-        return res.status(200).json({
-            "error":false,
-            "message":"OTP sent to your Registered Email Id. Do not make furthur OTP request for 15minutes",
-        })
+        return res.status(200)
+        .redirect('/api/profile/emailVerify')
+        // .json({
+        //     "error":false,
+        //     "message":"OTP sent to your Registered Email Id. Do not make furthur OTP request for 15minutes",
+        // })
         
     }catch(error){
-        return res.status(error.status || 500).json({
+        return res.status(error.status || 500).render('error',{
             "error":true,
             "message":error.message || "Could Not generate and send OTP"
         })
@@ -83,12 +90,14 @@ const PostEmailVerify = async(req, res)=>{
         user.verfied = true;
         user.save({validateBeforSave:false})
         await Otp.deleteOne({userid:user._id})
-        return res.status(200).json({
-            "error":false,
-            "message":"Email Verification Successfull"
-        })
+        return res.status(200)
+        .redirect('/api/profile/')
+        // .json({
+        //     "error":false,
+        //     "message":"Email Verification Successfull"
+        // })
     }catch(error){
-        return res.status(501).json({
+        return res.status(501).render('error',{
             "error":true,
             "message":error.status || "Server Error Occured"
         })

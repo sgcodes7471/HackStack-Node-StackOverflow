@@ -3,13 +3,9 @@ import express from 'express'
 import path from 'path'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 dotenv.config({
-    path:path.resolve(__dirname , '.env')
+    path:'./.env'
 })
 
 import userRoutes from './Routes/userRoutes.js'
@@ -22,7 +18,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.set('view engine'  , 'ejs')
 app.use(bodyParser.urlencoded({extended:true}))
-app.use(express.static(path.join(__dirname , 'public')))
+app.use(express.static('./public'))
 
 app.get('/api/user/signup',(req, res)=>{
     res.render('signup')

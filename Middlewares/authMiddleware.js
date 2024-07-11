@@ -4,17 +4,16 @@ const authMiddleware = async ( req, res, next)=>{
         const authToken = req.cookies?.AccessToken || req.headers['AccessToken']?.replace("Bearer " , '')
         if(!authToken)
             throw new Error(401 , "No Token")
-        jwt.verify(authToken , process.env.ACCESS_TOKEN_SECRET , (error,info)=>{
-            if(!info)
-                throw new Error(401, "Validation failed")
-            req.user = info
-            next()
-        })
+        const info = jwt.verify(authToken , process.env.ACCESS_TOKEN_SECRET)
+        if(!info)
+            throw new Error(401, "Validation failed")
+        req.user = info
+        next()
 
     } catch (error) {
-        return res.status(error.status || 500).json({
+        return res.status(error.status || 500).render('error',{
             "error":true,
-            "message":'Something went wrong'
+            "message":error.message || 'Something went wrong'
         })
     }
 }

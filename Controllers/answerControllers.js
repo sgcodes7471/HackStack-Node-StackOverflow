@@ -12,7 +12,6 @@ const AddAnswers = async (req, res)=>{
 
         const date = new Date()
         const day = String(date.getDate())
-        console.log(day)
         const month = String(date.getMonth()+1)
         const year = String(date.getFullYear())
 
@@ -21,13 +20,15 @@ const AddAnswers = async (req, res)=>{
         const newAnswer = await Answer.create({userid:userid,questionid:qid,username:user.username,answer:answer,date:`${day}/${month}/${year}`})
         if(!newAnswer)
             throw new Error("Server Error Occured")
-        return res.status(200).json({
-            "error":false,
-            "message":"Success",
-            "newAnswer":newAnswer
-        })
+        return res.status(200)
+        .redirect(`/api/user/${qid}`)
+        // .json({
+        //     "error":false,
+        //     "message":"Success",
+        //     "newAnswer":newAnswer
+        // })
     }catch(error){
-        return res.status(error.status||500).json({
+        return res.status(error.status||500).render('error',{
             "error":true,
             "message":error.message||"Server Error Occured"
         })
@@ -35,15 +36,16 @@ const AddAnswers = async (req, res)=>{
 }
 const DelAnswers = async (req, res)=>{
     try{
-        const qid = req.params.qid
         const cid = req.params.cid
         const user = req.user;
-        const answerToBeDel = await Answer.deleteOne({userid:user._id , questionid:qid , _id:cid})
+        const answerToBeDel = await Answer.deleteOne({userid:user._id  , _id:cid})
         if(!answerToBeDel || answerToBeDel.deletedCount===0)
             throw new Error('Answer could not be deleted')
         await Upvote.deleteMany({entityid:cid})
 
-        res.status(200).json({
+        res.status(200)
+        .redirect('/api/profile/')
+        .json({
             "error":false,
             "message":"Answer Deleted Successfully"
         })
@@ -69,11 +71,13 @@ const UpvoteAnswer = async (req, res)=>{
             answer.upvote = currentUpvotes
             const newUpvoteCount = await answer.save({validateBeforeSave:false})
             await Upvote.findOneAndDelete({userid:userid , entityid:answerid})
-            return res.status(200).json({
-                "error":false,
-                "message":"UpVote Removed Successfully",
-                "newUpvotes":newUpvoteCount.upvote
-            })
+            return res.status(200)
+            .redirect(`/api/question/${req.params.qid}`)
+            // .json({
+            //     "error":false,
+            //     "message":"UpVote Removed Successfully",
+            //     "newUpvotes":newUpvoteCount.upvote
+            // })
         }
         const newUpVote= await Upvote.create({userid:userid , entityid:answerid})
         if(!newUpVote){
@@ -83,13 +87,15 @@ const UpvoteAnswer = async (req, res)=>{
         const currentUpvotes = answer.upvote +1;
         answer.upvote = currentUpvotes
         const newUpvoteCount = await answer.save({validateBeforeSave:false})
-        return res.status(200).json({
-            "error":false,
-            "message":"Answer Upvoted Successfully",
-            "newUpvotes":newUpvoteCount.upvote
-        })
+        return res.status(200)
+        .redirect(`/api/question/${req.params.qid}`)
+        // .json({
+        //     "error":false,
+        //     "message":"Answer Upvoted Successfully",
+        //     "newUpvotes":newUpvoteCount.upvote
+        // })
     }catch(error){
-        return res.status(error.status || 500).json({
+        return res.status(error.status || 500).render('error',{
             "error":true,
             "message":error.messaga || 'server error occured'
         })
