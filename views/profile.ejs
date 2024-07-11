@@ -30,6 +30,7 @@
     <div class="flex">
         <div class="profile-box" id="q-box">
              <% if(questions.length>0){ questions.forEach((question)=>{ %>
+                <a href="/api/question/<%= question._id %>">
             <div class="q-card" onclick="handleGetQuestion('<%= question._id %>')">
                 <div class="q-id"><%= question._id %></div>
                 <div class="q-user">By <%= question.username %></div>
@@ -56,12 +57,14 @@
                     </div>
                 </div>
             </div>
+            </a>
             <% })}else{ %>
                 <div>No Questions in feed to show</div>
             <% }%>
         </div>
         <div class="profile-box" id="a-box">
              <% if(answers.length>0){ answers.forEach((answer)=>{ %>
+                <a href="/api/question/<%= answer.questionid %>">
             <div class="q-card" onclick="handleGetQuestion('<%= answer.questionid %>')">
                 <div class="q-id"><%= answer._id %></div>
                 <div class="q-user">By <%= answer.username %></div>
@@ -76,6 +79,7 @@
                     </div>
                 </div>
             </div>
+            </a>
             <% })}else{ %>
                 <div>No Questions in feed to show</div>
             <% }%>
