@@ -31,12 +31,12 @@ const GetQuestion = async(req, res)=>{
 
         return res.status(201)
         .render('question',{
-            "error":false,
-            "question":question,
-            "answers":answers,
-            "isUpvoted":isUpvoted,
-            "isViewed":isViewed,
-            "message":'Success'
+            error:false,
+            question:question,
+            answers:answers,
+            isUpvoted:isUpvoted,
+            isViewed:isViewed,
+            message:'Success'
         })
     }catch(error){
         return res.status(error.status || 500).render('error',{

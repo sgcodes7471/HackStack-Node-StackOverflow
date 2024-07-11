@@ -15,11 +15,11 @@ const Profile = async (req, res)=>{
         
         return res.status(200)
         .render('profile',{
-            "error":false,
-            "user":user,
-            "questions":questions,
-            "answers":answers,
-            "message":'Success'
+            error:false,
+            user:user,
+            questions:questions,
+            answers:answers,
+            message:'Success'
         })
         
     }catch(error){
