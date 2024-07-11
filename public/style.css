@@ -26,6 +26,15 @@ svg{
 .q-user{
     font-size: 0.9rem;
 }
+.btn-p a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+.full-txt{
+    width: 99%;
+}
 .navbar{
     padding: 20px;
     display: flex;
@@ -36,7 +45,7 @@ svg{
 .nav-btn-wrapper{
     display: flex;
 }
-.heading{
+.heading a{
     color: rgb(255, 128, 0);
     font-size: 2rem;
     font-weight: bold;

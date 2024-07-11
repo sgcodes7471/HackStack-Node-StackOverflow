@@ -26,7 +26,7 @@ const Signup = async(req, res)=>{
         
         mailUtil(email , "Welcome to StackUnderflow!!");
         return res.status(200)
-        .render('/api/user/login')
+        .redirect('/api/user/login')
         // .json({
         //     user:newUser,
         //     "error":false,

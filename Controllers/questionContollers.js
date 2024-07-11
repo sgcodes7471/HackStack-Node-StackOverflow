@@ -33,7 +33,7 @@ const GetQuestion = async(req, res)=>{
         .render('question',{
             "error":false,
             "question":question,
-            "answer":answers,
+            "answers":answers,
             "isUpvoted":isUpvoted,
             "isViewed":isViewed,
             "message":'Success'
@@ -52,7 +52,7 @@ const AddQuestion = async (req, res)=>{
         const description = req.body.description
         const tags = req.body.tags
 
-        const tagsArray = (!tags)?[]:tags.split(" ");
+        const tagsArray = (!tags)?[]:tags.trim().split(" ");
 
         if(!title || !description )
             throw new Error(400,'All details are not filled')
@@ -66,6 +66,7 @@ const AddQuestion = async (req, res)=>{
         if(!newQuestion)
             throw new Error(501,'Question could be added')
         return res.status(200)
+        .redirect(`/api/question/${newQuestion._id}`)
         // .json({
         //     "error":false,
         //     "message":'Successfully added',

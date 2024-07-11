@@ -5,7 +5,6 @@ const handleProfile = ({show , hide})=>{
     Hide.style.display='none'
 }
 
-
 const handleUpvoteColor = (isUpvoted)=>{
     const upvoteBtn = document.getElementById('qp-upvote').firstElementChild
     upvoteBtn.style.color = isUpvoted?'green':'black'
@@ -19,17 +18,35 @@ const handleGetQuestion = async(questionid)=>{
     }
 }
 
+const handleGetProfile = async ()=>{
+    try{
+        await fetch('http://localhost:3000/api/profile/' , {method:'GET'})
+    }catch(error){
+        alert('Network Error')
+    }
+}
+
+const handleLogout = async ()=>{
+try {
+    const response = await fetch('http://localhost:3000/api/user/logout',{method:'POST'})
+    if(response.status >399){
+        alert('Logged Out Successfully')
+        return
+    }
+    alert('Some Error Occured')
+} catch (error) {
+    alert('Network Error')
+}}
+
 const handleUpvoteQuestion = async (questionid)=>{
     try {
         const response = await fetch(`http://localhost:3000/api/question/${questionid}/upvote-question`,{
             method:'POST',
         })
-        const data = await response.data;
-        if(data.error){
+        if(response.status >399){
             alert('Some Error Occured')
             return
-        }
-        alert(data.message) 
+        } 
     } catch (error) {
         alert('Some Error Occured')
     }
@@ -40,11 +57,10 @@ const handleUpvoteAnswer = async (answerid, questionid)=>{
          method:'POST',
      })
      const data = await response.data;
-     if(data.error){
+     if(response.status >399){
          alert('Some Error Occured')
          return
      }
-     alert(data.message) 
    } catch (error) {
     alert('Some Error Occured')
    }
@@ -55,11 +71,10 @@ const handleDelQuestion = async (questionid)=>{
             method:'DELETE',
         })
         const data = await response.data;
-        if(data.error){
+        if(response.status >399){
             alert('Some Error Occured')
             return
         }
-        alert(data.message) 
       } catch (error) {
        alert('Some Error Occured')
       }
@@ -69,12 +84,10 @@ const handleDelAnswer = async (answerid)=>{
         const response = await fetch(`http://localhost:3000/api/profile/${answerid}/del-answer`,{
             method:'DELETE',
         })
-        const data = await response.data;
-        if(data.error){
+        if(response.status >399){
             alert('Some Error Occured')
             return
         }
-        alert(data.message) 
       } catch (error) {
        alert('Some Error Occured')
       }
