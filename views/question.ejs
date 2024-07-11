@@ -48,8 +48,8 @@
     </div>
 
     <div class="ans-form-box">
-        <form class="ans-form" method="POST">
-            <input class="ans-input" type="text" name="title" placeholder="Write your answer here..." required/>
+        <form action="/api/question/<%= question._id %>/add-answer" class="ans-form" method="POST">
+            <input class="ans-input" type="text" name="answer" placeholder="Write your answer here..." required/>
             <input class="sub-btn" type="submit" value="Add">
         </form>
     </div>
@@ -60,8 +60,7 @@
          <div class="q-card">
             <div class="q-id"><%= answer._id %></div>
             <div class="q-user">By <%= answer.username %></div>
-            <div class='q-title'><%= answer.title %></div>
-            <div ><%= answer.text %></div>
+            <div class='q-title'><%= answer.answer %></div>
             <div class="q-footer">
                 <%= answer.upvote %><p id="qp-upvote" class="qp-svg" onclick="handleUpvoteAnswer('<%= answer._id %>' , '<%= question._id %>')">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
